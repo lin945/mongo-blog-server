@@ -13,14 +13,21 @@ import java.util.*
 @Document("User")
 data class UserDO(
     @Id
-    var id: ObjectId =ObjectId(),
+    var id: ObjectId = ObjectId(),
     var nickname: String,
     val userName: String,
     var password: String,
     var info: String = "",
     val createTime: Date = Date(),
     var updateTime: Date = Date()
-):Serializable
+) : Serializable
+
+/**
+ * 用户登录验证model
+ */
+data class UserLoginAO(
+    var userName: String?,
+    var password: String?) : Serializable
 
 /**
  * 用户view模型
