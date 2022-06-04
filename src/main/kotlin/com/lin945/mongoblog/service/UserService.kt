@@ -1,5 +1,7 @@
 package com.lin945.mongoblog.service
 
-interface UserService {
+import com.lin945.mongoblog.pojo.UserDO
 
+interface UserService {
+    fun getUserByUserName(username:String):UserDO?
 }

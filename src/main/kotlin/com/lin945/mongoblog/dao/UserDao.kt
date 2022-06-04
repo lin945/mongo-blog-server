@@ -5,5 +5,5 @@ import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface UserDao: MongoRepository<UserDO, ObjectId> {
-
+    fun findUserDOByUserName(userName:String):UserDO?
 }

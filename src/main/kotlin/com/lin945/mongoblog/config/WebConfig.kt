@@ -1,4 +1,5 @@
 package com.lin945.mongoblog.config
+import com.lin945.mongoblog.config.shiro.JwtFilter
 import org.apache.shiro.mgt.SecurityManager
 import org.apache.shiro.authz.Authorizer
 import org.apache.shiro.authz.ModularRealmAuthorizer
@@ -35,7 +36,6 @@ class WebConfig : WebMvcConfigurer {
     @Bean
     fun shiroFilterFactoryBean(securityManager: SecurityManager): ShiroFilterFactoryBean {
         val factoryBean = ShiroFilterFactoryBean()
-
         /*
         * filter配置规则参考官网
         * http://shiro.apache.org/web.html#urls-
@@ -47,12 +47,14 @@ class WebConfig : WebMvcConfigurer {
         filterRuleMap["/comment/*"] = "anon"
 //        filterRuleMap["/error"] = "anon"
 //        filterRuleMap["/register"] = "anon"
-        filterRuleMap["/login"] = "anon"
+        filterRuleMap["/admin/login"] = "anon"
         //↑配置不参与验证的映射路径。
 
         // 关键：配置jwt验证过滤器。
         //↓ 此处即为shiro1.8新增的默认过滤器：authcBearer-BearerHttpAuthenticationFilter。jwt验证的很多操作都由该filter自动完成，以致我们只需理解其机制而无需亲手实现。
-        filterRuleMap["/**"] = "authcBearer"
+        //filterRuleMap["/**"] = "authcBearer"
+        filterRuleMap["/**"] = "authc"
+        factoryBean.filters["authc"]= JwtFilter()
         //↑ 如果有其他过滤法则配在/**上，则在第二个参数的字符串里使用逗号间隔。
         factoryBean.setGlobalFilters(listOf("noSessionCreation"))
         //↑ 关键：全局配置NoSessionCreationFilter，把整个项目切换成无状态服务。
@@ -65,4 +67,5 @@ class WebConfig : WebMvcConfigurer {
     protected fun authorizer(): Authorizer {
         return ModularRealmAuthorizer()
     }
+
 }
