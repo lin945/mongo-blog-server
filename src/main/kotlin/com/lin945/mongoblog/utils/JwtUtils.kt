@@ -8,11 +8,12 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import java.util.*
 
-
+const val SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO"
 private const val secret = "f4e2e52034348f86b67cde581c0f9eb5"
 private const val expire: Long = 604800
 private const val header = "Authorization"
-private val key = Keys.secretKeyFor(SignatureAlgorithm.HS256)!!
+//hs256的key
+private val key=Keys.hmacShaKeyFor(secret.toByteArray())!!
 
 /**
  * 生成jwt token
@@ -28,16 +29,19 @@ fun generateToken(user: LoginUser): String {
         .claim("nickName", user.nickName)
         .setIssuedAt(nowDate)
         .setExpiration(expireDate)
-        .signWith(key)
+        .signWith( key,SignatureAlgorithm.HS256)
         .compact()
 }
 
+/**
+ * 解析jwt
+ */
 fun getLoginUser(token: String?): LoginUser? {
     return try {
         Jwts.parserBuilder().setSigningKey(key).build()
             .parseClaimsJws(token)
             .body?.let {
-                LoginUser(it.subject, it["userName"].toString(), it["nickname"].toString(), "")
+                LoginUser(it.subject, it["userName"].toString(), it["nickName"].toString(), "")
             }
     } catch (e: Exception) {
         e.printStackTrace()
@@ -45,9 +49,11 @@ fun getLoginUser(token: String?): LoginUser? {
     }
 }
 
-
+/**
+ * 校验jwt
+ */
 fun verify(token: String?): Boolean {
-    return token?.let { Jwts.parserBuilder().setSigningKey(key).build().parsePlaintextJws(it) != null } ?: false
+    return token?.let { Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(it) != null } ?: false
 }
 
 /**

@@ -19,13 +19,13 @@ class TokenValidateRealm() : AuthenticatingRealm(matcher) {
 
     /**
      * 匹配验证
+     * 2.然后进入这里
      */
     object matcher :CredentialsMatcher{
         private val log : Logger = LoggerFactory.getLogger(this.javaClass)
         override fun doCredentialsMatch(token: AuthenticationToken, info: AuthenticationInfo?): Boolean {
             val bearerToken = token as BearerToken
             val tokenString = bearerToken.token
-            log.info("tokenMatcher : {}",tokenString)
             log.info("tokenMatcher : {}",info)
             return verify(tokenString)
         }
@@ -34,12 +34,15 @@ class TokenValidateRealm() : AuthenticatingRealm(matcher) {
     override fun getAuthenticationTokenClass(): Class<*> {
         return BearerToken::class.java
     }
-    //获取校验信息
+
+    /**
+     * 获取校验信息
+     * 首1.先进入这里
+     */
     override fun doGetAuthenticationInfo(token: AuthenticationToken?): AuthenticationInfo? {
         val bearerToken = token as BearerToken
         val tokenString = bearerToken.token//token String
         val loginUser = getLoginUser(tokenString)//解析token
-        log.info("login User:{}",loginUser)
         return loginUser?.let {
             SimpleAuthenticationInfo(it, tokenString, name)
         }

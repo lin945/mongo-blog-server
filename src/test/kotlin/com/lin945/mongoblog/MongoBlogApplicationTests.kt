@@ -9,6 +9,7 @@ import com.lin945.mongoblog.service.BlogService
 import com.lin945.mongoblog.service.UserService
 import com.lin945.mongoblog.utils.generateToken
 import com.lin945.mongoblog.utils.getLoginUser
+import com.lin945.mongoblog.utils.verify
 import org.apache.shiro.crypto.hash.Md5Hash
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
@@ -108,6 +109,7 @@ class MongoBlogApplicationTests {
 
     @Test
     fun createUser() {
+        println(verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsInVzZXJOYW1lIjoidXNlck5hbWUiLCJuaWNrTmFtZSI6Im5pY2tOYW1lIiwiaWF0IjoxNjU0MzkxMTkwLCJleHAiOjE2NTQ5OTU5OTB9.SubR3PdnV3I_S4NAUDB7pl_tmJPh-zoRU3y6kAUq67c"))
         val generateToken = generateToken(LoginUser("11", "userName", "nickName", password = "aaa"))
         println(generateToken)
         println(getLoginUser(generateToken))
