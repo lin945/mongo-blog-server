@@ -1,5 +1,8 @@
 package com.lin945.mongoblog.pojo
 
+/**
+ * 统一异常处理类
+ */
 data class Result<T>(
     var data: T?,
     var message: String = "ok",

@@ -34,6 +34,8 @@ public fun BlogDO.toVO()=BlogVO(
     commentNumber = comments.size,
     userName = ""
 )
+data class BlogCreateAO(var title: String,var content: String)
+
 data class  BlogVO @JvmOverloads constructor(
     val id: String,
     var title: String,

@@ -48,7 +48,7 @@ class ExceptionHandler {
     fun handlerAll(e: IncorrectCredentialsException): Result<Unit> {
         val message = e.localizedMessage
         log.warn(message)
-        return Result.fail(CodeConfig.ERROR).apply {
+        return Result.fail(CodeConfig.ERROR_PASSWORD).apply {
             this.message="傻逼密码错了！"
         }
     }

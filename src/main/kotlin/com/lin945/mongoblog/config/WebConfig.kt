@@ -1,9 +1,17 @@
 package com.lin945.mongoblog.config
 import com.lin945.mongoblog.config.shiro.JwtFilter
+import com.lin945.mongoblog.config.shiro.UserRealmAuthenticator
+import org.apache.shiro.authc.Authenticator
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator
 import org.apache.shiro.mgt.SecurityManager
-import org.apache.shiro.authz.Authorizer
-import org.apache.shiro.authz.ModularRealmAuthorizer
+import org.apache.shiro.realm.Realm
+import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebAutoConfiguration
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.cors.CorsConfiguration
@@ -11,12 +19,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import kotlin.collections.HashMap
 
 
 @Configuration
+@AutoConfigureBefore(ShiroWebAutoConfiguration::class)
 class WebConfig : WebMvcConfigurer {
-
+    val log : Logger = LoggerFactory.getLogger(this.javaClass)
     @Bean
     fun corsFilter(): CorsFilter {
         return CorsFilter(UrlBasedCorsConfigurationSource().apply {
@@ -34,7 +42,16 @@ class WebConfig : WebMvcConfigurer {
     }
 
     @Bean
-    fun shiroFilterFactoryBean(securityManager: SecurityManager): ShiroFilterFactoryBean {
+    fun securityManager(realms: Collection<Realm>,userRealmAuthenticator: UserRealmAuthenticator): DefaultWebSecurityManager {
+        val sManager = DefaultWebSecurityManager()
+        sManager.authenticator=userRealmAuthenticator
+        sManager.realms = realms
+        return sManager
+    }
+
+    @Bean
+    fun shiroFilterFactoryBean(securityManager: DefaultWebSecurityManager): ShiroFilterFactoryBean {
+
         val factoryBean = ShiroFilterFactoryBean()
         /*
         * filter配置规则参考官网
@@ -51,7 +68,8 @@ class WebConfig : WebMvcConfigurer {
         //↑配置不参与验证的映射路径。
 
         // 关键：配置jwt验证过滤器。
-        //↓ 此处即为shiro1.8新增的默认过滤器：authcBearer-BearerHttpAuthenticationFilter。jwt验证的很多操作都由该filter自动完成，以致我们只需理解其机制而无需亲手实现。
+        //↓ 此处即为shiro1.8新增的默认过滤器：authcBearer-BearerHttpAuthenticationFilter。
+        // jwt验证的很多操作都由该filter自动完成，以致我们只需理解其机制而无需亲手实现。
         //filterRuleMap["/**"] = "authcBearer"
         filterRuleMap["/**"] = "authc"
         factoryBean.filters["authc"]= JwtFilter()
@@ -63,9 +81,6 @@ class WebConfig : WebMvcConfigurer {
         return factoryBean
     }
 
-    @Bean
-    protected fun authorizer(): Authorizer {
-        return ModularRealmAuthorizer()
-    }
+
 
 }

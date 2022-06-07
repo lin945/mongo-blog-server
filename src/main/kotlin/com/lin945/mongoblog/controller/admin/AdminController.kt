@@ -1,9 +1,6 @@
 package com.lin945.mongoblog.controller.admin
 
-import com.lin945.mongoblog.pojo.CodeConfig
-import com.lin945.mongoblog.pojo.LoginUser
-import com.lin945.mongoblog.pojo.Result
-import com.lin945.mongoblog.pojo.UserLoginAO
+import com.lin945.mongoblog.pojo.*
 import com.lin945.mongoblog.utils.generateToken
 import com.lin945.mongoblog.utils.getLoginUser
 import org.apache.shiro.SecurityUtils
@@ -21,6 +18,9 @@ class AdminController {
     val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
 
+    /**
+     * 登录接口
+     */
     @PostMapping("/login")
     public fun login(@RequestBody user: UserLoginAO): Result<String> {
        return user.takeIf {
@@ -35,6 +35,11 @@ class AdminController {
         } ?: throw RuntimeException(CodeConfig.PARAM_ERROR.message)
     }
 
+
+    @PostMapping("/blog/add")
+    fun addBlog(blog:BlogCreateAO) {
+
+    }
 
     @RequestMapping("/test")
     fun test(): Result<String> {

@@ -2,11 +2,9 @@ package com.lin945.mongoblog.config.shiro
 
 import com.lin945.mongoblog.pojo.LoginUser
 import com.lin945.mongoblog.service.UserService
-import org.apache.shiro.authc.AuthenticationInfo
-import org.apache.shiro.authc.AuthenticationToken
-import org.apache.shiro.authc.SimpleAuthenticationInfo
-import org.apache.shiro.authc.UsernamePasswordToken
+import org.apache.shiro.authc.*
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher
+import org.apache.shiro.authc.pam.UnsupportedTokenException
 import org.apache.shiro.crypto.hash.Md5Hash
 import org.apache.shiro.realm.AuthenticatingRealm
 import org.slf4j.LoggerFactory
@@ -21,8 +19,6 @@ import org.springframework.stereotype.Component
 open class UsernamePasswordRealm() : AuthenticatingRealm() {
     val log = LoggerFactory.getLogger(this::class.java)
 
-
-
     @Autowired
     lateinit var userService: UserService
 
@@ -34,6 +30,9 @@ open class UsernamePasswordRealm() : AuthenticatingRealm() {
         credentialsMatcher=hashedCredentialsMatcher
     }
 
+    /**
+     * 从token中登录
+     */
     override fun doGetAuthenticationInfo(token: AuthenticationToken): AuthenticationInfo? {
         log.info("授权：$token")
         val userToken = token as UsernamePasswordToken
@@ -43,14 +42,12 @@ open class UsernamePasswordRealm() : AuthenticatingRealm() {
         return userDO?.let {
             val loginUser = LoginUser(it.id.toHexString(), it.userName,it.nickname, it.password)
             //和token中的密码比较
-            return SimpleAuthenticationInfo(
-                loginUser, passwordMatcher,name
-            )
-        }
+            SimpleAuthenticationInfo(loginUser, passwordMatcher,name)
+        }?:throw UnknownAccountException("不存在此用户");
     }
 
     /**
-     * 加密的密码
+     * 加密的密码2次md5
      */
     private fun getPasswordMatcher(currentPassword: String): String {
         return Md5Hash(currentPassword, null, 2).toString()

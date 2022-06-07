@@ -26,7 +26,6 @@ class BlogServiceImpl:BlogService {
     override fun getBlogs(page: Int,size:Int): Page<BlogVO> {
         return blogDao.findAll(PageRequest.of(page,size)).map(BlogDO::toVO)
     }
-
     override fun getComment(id: String):List<Comment> {
         val findById = blogDao.findById(ObjectId(id)).get()
         return findById.comments

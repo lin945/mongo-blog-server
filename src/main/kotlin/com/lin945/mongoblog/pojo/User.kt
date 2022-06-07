@@ -32,6 +32,9 @@ data class UserLoginAO(
     var userName: String?,
     var password: String?) : Serializable
 
+/**
+ * 登录jwt用户
+ */
 data class LoginUser(val id:String,
                      var userName: String,
                      var nickName: String,
