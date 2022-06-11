@@ -6,6 +6,7 @@ import com.lin945.mongoblog.pojo.LoginUser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import org.apache.shiro.SecurityUtils
 import java.util.*
 
 const val SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO"
@@ -48,7 +49,7 @@ fun getLoginUser(token: String?): LoginUser? {
         return null
     }
 }
-
+fun getLoginUser()= SecurityUtils.getSubject().principal as LoginUser;
 /**
  * 校验jwt
  */

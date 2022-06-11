@@ -6,24 +6,25 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.io.Serializable
 import java.util.*
+import javax.validation.constraints.NotEmpty
 
 @Document("Blog")
-data class BlogDO(
+data class BlogDO @JvmOverloads constructor(
     @Id
     val id: ObjectId = ObjectId(),
     var title: String,
     var content: String,
-    var description: String = if (content.length > 50) content.substring(0,50) else content,
-    var img: String,
+    var description: String,
+    var img: String?=null,
     var published: Boolean = true,
     var views: Long = 0,
-    var userId: Long,
+    var userId: String,
     var comments: List<Comment> = emptyList(),
     var createTime: Date,
     var updateTime: Date = Date()
 )
 
-public fun BlogDO.toVO()=BlogVO(
+fun BlogDO.toVO()=BlogVO(
     id = id.toString(),
     title = title,
     content = content,
@@ -32,16 +33,17 @@ public fun BlogDO.toVO()=BlogVO(
     updateTime = updateTime,
     views = views,
     commentNumber = comments.size,
-    userName = ""
+    userName = "",
+    description = description
 )
-data class BlogCreateAO(var title: String,var content: String)
+data class BlogCreateAO @JvmOverloads constructor(var title: String, var content: String, var img:String="",var description: String=if (content.length > 50) content.substring(0,50) else content )
 
 data class  BlogVO @JvmOverloads constructor(
     val id: String,
     var title: String,
     var content: String,
-    var description: String = if (content.length > 50) content.substring(0,50) else content,
-    var img: String = "",
+    var description: String,
+    var img: String? = null,
     var published: Boolean = true,
     var views: Long = 0,
     var userName: String,

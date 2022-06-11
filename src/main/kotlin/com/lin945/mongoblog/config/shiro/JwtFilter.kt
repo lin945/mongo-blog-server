@@ -43,6 +43,7 @@ class JwtFilter : BearerHttpAuthenticationFilter() {
             }
             resp.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
             resp.setHeader("Access-Control-Allow-Credentials", "true");
+            resp.setHeader("Access-Control-Allow-Headers", "accept,x-requested-with,Content-Type,Authorization");
             resp.contentType = "application/json; charset=utf-8";
             resp.characterEncoding = "UTF-8";
             resp.writer.write(objectMapper.writeValueAsString(Result.fail(CodeConfig.TOKEN_NOTNULL)))

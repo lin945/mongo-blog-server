@@ -63,7 +63,7 @@ class MongoBlogApplicationTests {
                     description = "小小的描述",
                     img = "https://bilibili.asia/banner01.jpg",
                     createTime = Date(),
-                    userId = 1
+                    userId = "1"
                 )
             )
         }
@@ -97,6 +97,28 @@ class MongoBlogApplicationTests {
 
 
     @Test
+    fun addBlolog() {
+        println(
+            blogService.save(
+                BlogDO(
+                    title = "这是一片测试",
+                    comments = listOf(
+                        Comment(
+                            userName = "233",
+                            email = "1@qqq.com",
+                            content = "asdfasfasfs",
+                            createTime = Date()
+                        )
+                    ),
+                    content = "正文啊实打实的发生",
+                    description = "小小的描述",
+                    createTime = Date(),
+                    userId = "1"
+                )
+            )
+        )
+    }
+    @Test
     fun preintPass() {
         println(Md5Hash("123456", null, 2).toString())
     }
@@ -105,6 +127,12 @@ class MongoBlogApplicationTests {
     fun regiserUser() {
         userDao.save(UserDO(nickname = "林唯心", userName = "root", info = "哈哈哈哈哈哈哈哈哈", password = "123456"))
 
+    }
+
+    @Test
+    fun cacheTest() {
+        println(blogService.getBlogs(0, 5))
+        println(blogService.getBlogs(0, 5))
     }
 
     @Test

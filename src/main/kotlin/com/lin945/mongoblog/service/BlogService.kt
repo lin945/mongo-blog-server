@@ -10,4 +10,9 @@ interface BlogService {
 
     fun getComment(id: String):List<Comment>
     fun getBlogById(id: String):BlogVO
+
+    fun save(blogDO: BlogDO):BlogDO
+
+    fun deleteCache()
+
 }
