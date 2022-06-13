@@ -5,12 +5,13 @@
 > - kotlin
 > - Springboot
 > - Springboot-data-redis
+> - Springboot-data-cache
 > - Springboot-data-mongodb
 > - jjwt
 > - shiro
 > - Gradle
 > - IntelliJ IDEA
-> - rocketMQ
 > - Nacos
+> - ~~rocketMQ~~
 
 
