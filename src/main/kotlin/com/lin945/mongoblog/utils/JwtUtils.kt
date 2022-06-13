@@ -3,10 +3,14 @@
 package com.lin945.mongoblog.utils
 
 import com.lin945.mongoblog.pojo.LoginUser
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
 import org.apache.shiro.SecurityUtils
+import org.apache.shiro.authc.ExpiredCredentialsException
+import org.apache.shiro.authc.pam.UnsupportedTokenException
 import java.util.*
 
 const val SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO"
@@ -45,6 +49,11 @@ fun getLoginUser(token: String?): LoginUser? {
                 LoginUser(it.subject, it["userName"].toString(), it["nickName"].toString(), "")
             }
     } catch (e: Exception) {
+        if (e is ExpiredJwtException) {
+            throw ExpiredCredentialsException(e.message)
+        }else if (e is SignatureException){
+            throw UnsupportedTokenException(e.message)
+        }
         e.printStackTrace()
         return null
     }

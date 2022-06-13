@@ -11,15 +11,10 @@ import com.lin945.mongoblog.utils.generateToken
 import com.lin945.mongoblog.utils.getLoginUser
 import com.lin945.mongoblog.utils.verify
 import org.apache.shiro.crypto.hash.Md5Hash
-import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.Example
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.repository.MongoRepository
 import java.util.*
 
 @SpringBootTest
@@ -71,6 +66,14 @@ class MongoBlogApplicationTests {
         println(blogDao.findAll())
     }
 
+//    @Test
+//    fun MarkdownTest() {
+//        val src = "Some *Markdown*"
+//        val flavour = CommonMarkFlavourDescriptor()
+//        val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(src)
+//        val html = HtmlGenerator(src, parsedTree, flavour).generateHtml()
+//        println(html)
+//    }
     @Test
     fun addUser() {
         val user = UserDO(nickname = "林唯心", password = "123456", userName = "admin")

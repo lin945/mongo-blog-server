@@ -4,7 +4,6 @@ import com.lin945.mongoblog.pojo.LoginUser
 import com.lin945.mongoblog.service.UserService
 import org.apache.shiro.authc.*
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher
-import org.apache.shiro.authc.pam.UnsupportedTokenException
 import org.apache.shiro.crypto.hash.Md5Hash
 import org.apache.shiro.realm.AuthenticatingRealm
 import org.slf4j.LoggerFactory

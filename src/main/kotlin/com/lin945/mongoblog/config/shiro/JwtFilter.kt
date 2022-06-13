@@ -5,6 +5,8 @@ import com.lin945.mongoblog.pojo.CodeConfig
 import com.lin945.mongoblog.pojo.Result
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationToken
+import org.apache.shiro.authc.ExpiredCredentialsException
+import org.apache.shiro.authc.pam.UnsupportedTokenException
 import org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -40,13 +42,17 @@ class JwtFilter : BearerHttpAuthenticationFilter() {
             val resp = response as HttpServletResponse
             if (req.method == HttpMethod.OPTIONS.name) {
                 resp.status = HttpStatus.OK.value()
+                resp.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
+                resp.setHeader("Access-Control-Allow-Credentials", "true");
+                resp.setHeader("Access-Control-Allow-Headers", "accept,x-requested-with,Content-Type,Authorization");
+                resp.contentType = "application/json; charset=utf-8";
+                resp.characterEncoding = "UTF-8";
             }
-            resp.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
-            resp.setHeader("Access-Control-Allow-Credentials", "true");
-            resp.setHeader("Access-Control-Allow-Headers", "accept,x-requested-with,Content-Type,Authorization");
-            resp.contentType = "application/json; charset=utf-8";
-            resp.characterEncoding = "UTF-8";
-            resp.writer.write(objectMapper.writeValueAsString(Result.fail(CodeConfig.TOKEN_NOTNULL)))
+            val header = req.getHeader(AUTHORIZATION_HEADER)
+            if (header == null || header.isEmpty()) {
+                resp.writer.write(objectMapper.writeValueAsString(Result.fail(CodeConfig.TOKEN_NOTNULL)))
+            }
+
             return false
         }
         return loggedIn
@@ -61,7 +67,18 @@ class JwtFilter : BearerHttpAuthenticationFilter() {
         request: ServletRequest?,
         response: ServletResponse?
     ): Boolean {
-
-        return super.onLoginFailure(token, e, request, response)
+        val req = request as HttpServletRequest
+        val resp = response as HttpServletResponse
+        resp.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setHeader("Access-Control-Allow-Headers", "accept,x-requested-with,Content-Type,Authorization");
+        resp.contentType = "application/json; charset=utf-8";
+        resp.characterEncoding = "UTF-8";
+        if (e is ExpiredCredentialsException) {
+            resp.writer.write(objectMapper.writeValueAsString(Result.fail(CodeConfig.LOGIN_EXPIRED)))
+        }else if (e is UnsupportedTokenException) {
+            resp.writer.write(objectMapper.writeValueAsString(Result.fail(CodeConfig.TOKEN_ERROR)))
+        }
+        return false
     }
 }

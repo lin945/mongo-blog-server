@@ -2,7 +2,6 @@ package com.lin945.mongoblog.config.shiro
 
 import org.apache.shiro.authc.AuthenticationInfo
 import org.apache.shiro.authc.AuthenticationToken
-import org.apache.shiro.authc.UnknownAccountException
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator
 import org.apache.shiro.authc.pam.ShortCircuitIterationException
 import org.apache.shiro.realm.Realm

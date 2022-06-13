@@ -30,10 +30,11 @@ enum class CodeConfig(val code: Int, val message: String) {
     ERROR(100, "失败"),
     PARAM_ERROR(101, "参数错误"),
     TOKEN_NOTNULL(102, "身份信息不能为空"),
-    SFM_JYM_ERROR(
+    TOKEN_ERROR(
         103,
-        "身份信息有误"
+        "TOKEN信息有误"
     ),
+    LOGIN_EXPIRED(104,"登录过期"),
     PERMISSION_DENIED(105, "权限不足"),
     SUCCESS(200, "成功"),
     FUNCTION_NOT_OPEN(400, "功能未开放"),

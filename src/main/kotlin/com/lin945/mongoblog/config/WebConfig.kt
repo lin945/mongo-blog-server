@@ -1,10 +1,6 @@
 package com.lin945.mongoblog.config
 import com.lin945.mongoblog.config.shiro.JwtFilter
 import com.lin945.mongoblog.config.shiro.UserRealmAuthenticator
-import org.apache.shiro.authc.Authenticator
-import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy
-import org.apache.shiro.authc.pam.ModularRealmAuthenticator
-import org.apache.shiro.mgt.SecurityManager
 import org.apache.shiro.realm.Realm
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebAutoConfiguration
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean
